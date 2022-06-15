@@ -126,19 +126,19 @@ def local_app(v : Visualizer):
     plt.show()
     
     
-def kafka_thread(v : Visualizer, broker):
+def kafka_thread(v : Visualizer):
     """
     Kafka consumer to update the Visualizer collision times (with opera collision messages)
     """
     consumer = KafkaConsumer(
-        os.environ['TOPIC'], # topic name
-        bootstrap_servers=os.environ['BROKERS'], # broker
+        'opera_data_collision_prediction', # topic name
+        bootstrap_servers=os.environ['KAFKA_BROKER_URI'], # broker
         auto_offset_reset='latest',
-        group_id="%s-consumer" % os.environ['USERNAME'],
-        sasl_mechanism=os.environ['SASL_MECHANISM'],
-        security_protocol=os.environ['PROTOCOL'],
-        sasl_plain_username=os.environ['USERNAME'],
-        sasl_plain_password=os.environ['PASSWORD'])
+        group_id="%s-consumer" % os.environ['KAFKA_USERNAME'],
+        sasl_mechanism=os.environ['KAFKA_SASL_MECHANISM'],
+        security_protocol=os.environ['KAFKA_SECURITY_PROTOCOL'],
+        sasl_plain_username=os.environ['KAFKA_USERNAME'],
+        sasl_plain_password=os.environ['KAFKA_PASSWORD'])
     
     print("Kafka consumer connected!")
     
@@ -256,7 +256,7 @@ if __name__ == "__main__":
     v = Visualizer()
     
     # Create threads and pass arguments to target function
-    thread = threading.Thread(target=kafka_thread, args=(v, 'localhost:9092'), daemon=True) 
+    thread = threading.Thread(target=kafka_thread, args=(v, ), daemon=True) 
     # thread = threading.Thread(target=mqtt_thread, args=(v, 'localhost'), daemon=True) 
     
     # Start threads
