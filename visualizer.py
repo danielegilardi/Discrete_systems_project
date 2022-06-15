@@ -144,7 +144,7 @@ def kafka_thread(v : Visualizer):
     
     for msg in consumer:
         my_json = json.loads(msg.value)
-        print(my_json)
+        # print(my_json)
         v.update_collision_times(str(my_json['human']['segment']), my_json['collisionDistance']['lower'], my_json['currentTime'])
 
 
